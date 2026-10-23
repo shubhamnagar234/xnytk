@@ -91,6 +91,26 @@ This document records the use of AI assistance (Google Antigravity) throughout t
   - Verified production build compiles cleanly (`npm run build`).
   - Executed browser verification session testing interactive vintage toggles, date changes, and navigation across all 3 routes with 0 console errors.
 
+---
 
-
-
+## Phase 6: Containerization (Docker & Docker Compose)
+- **Date**: October 23, 2026
+- **AI Tool**: Antigravity (Powered by Gemini 3.8 Flash)
+- **What AI generated**:
+  - `backend/Dockerfile`: Production Python 3.11-slim container running FastAPI through Uvicorn, with curl-based container healthcheck and non-cache pip installation.
+  - `backend/.dockerignore`: Prevents pycache, venv, and local git state from polluting backend image.
+  - `frontend/Dockerfile`: Multi-stage build leveraging `node:20-alpine` to build the static React production bundle and `nginx:alpine` to serve static assets with reverse-proxying.
+  - `frontend/nginx.conf`: Nginx configuration with gzip compression, SPA client-side routing fallback (`try_files $uri $uri/ /index.html`), and reverse proxy passing `/api/` traffic directly to `http://backend:8000/api/`.
+  - `frontend/.dockerignore` and `.dockerignore`: Optimizes build contexts for both containers.
+  - `docker-compose.yml`: Multi-container orchestration binding backend (8000) and frontend (3000), internal bridge network `wind-forecast-net`, dependency healthcheck condition (`service_healthy`), and read-only volume mounting for `data/`.
+  - `Makefile`: Added `docker-build`, `docker-up`, and `docker-down` helper targets.
+- **Manual Verification & Changes**:
+  - Removed obsolete top-level `version: '3.8'` attribute from compose specification to conform with Docker Compose v2+.
+  - Executed `docker compose build` and verified image export for both `assessment-backend` and `assessment-frontend`.
+  - Executed `docker compose up -d` and verified backend startup and healthy status (`wind-forecast-backend Healthy`).
+  - Tested HTTP endpoints end-to-end:
+    - Direct backend `/api/health` on port 8000 (`{"status":"ok",...}`).
+    - Proxied frontend `/api/health` on port 3000 (`{"status":"ok",...}`).
+    - Proxied frontend `/api/meta` on port 3000 (`{"delivery_days":[...],"total_actual_rows":1488,...}`).
+    - Client-side routing fallback on port 3000 (`/methodology` returns HTTP 200 with SPA HTML).
+  - Executed `docker compose down` and verified clean container and network teardown.

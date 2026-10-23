@@ -1,4 +1,4 @@
-.PHONY: help dev-backend dev-frontend test lint install-backend install-frontend
+.PHONY: help dev-backend dev-frontend test lint install-backend install-frontend docker-build docker-up docker-down
 
 help:
 	@echo "Available targets:"
@@ -7,6 +7,9 @@ help:
 	@echo "  make test          - Run backend unit tests with pytest"
 	@echo "  make lint          - Lint backend with ruff and frontend with typescript"
 	@echo "  make install       - Install backend and frontend dependencies"
+	@echo "  make docker-build  - Build Docker containers"
+	@echo "  make docker-up     - Start Docker containers in detached mode"
+	@echo "  make docker-down   - Stop and remove Docker containers"
 
 dev-backend:
 	python -m uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
@@ -28,3 +31,12 @@ install-frontend:
 	cd frontend && npm install
 
 install: install-backend install-frontend
+
+docker-build:
+	docker compose build
+
+docker-up:
+	docker compose up -d
+
+docker-down:
+	docker compose down
