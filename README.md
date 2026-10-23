@@ -6,7 +6,7 @@
 [![Docker](https://img.shields.io/badge/docker-compose%20ready-blue.svg)](#running-with-docker)
 [![Vercel](https://img.shields.io/badge/deploy-vercel-black.svg)](#vercel-deployment)
 
-> **Live Deployment:** [https://uk-wind-forecast-dashboard.vercel.app](https://uk-wind-forecast-dashboard.vercel.app) *(placeholder — deploy via your Vercel account)*
+> **Live Deployment:** [https://xnytk1-ten.vercel.app](https://xnytk1-ten.vercel.app)
 
 A decision-support web application for a UK energy utility's day-ahead power trading desk. Power purchase decisions for delivery day $D$ are executed on day $D-1$ before power exchange gate closure, heavily relying on national wind generation forecasts from **Elexon BMRS**.
 
