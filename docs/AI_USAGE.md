@@ -131,3 +131,22 @@ This document records the use of AI assistance (Google Antigravity) throughout t
   - Validated all 27 pytest unit and integration tests passing (`pytest backend/tests`).
   - Verified frontend production build pipeline via `npm --prefix frontend run build` (outputs to `frontend/dist`).
   - Tested programmatic `TestClient` queries through `api.index:app` for `/api/health`, `/health` (stripped prefix), `/api/meta`, `/api/forecast/decision`, and `/api/accuracy/summary` with 100% success.
+
+---
+
+## Phase 8: Documentation & AI Disclosure (README.md & AI_USAGE.md)
+- **Date**: October 23, 2026
+- **AI Tool**: Antigravity (Powered by Gemini 3.8 Flash)
+- **What AI generated**:
+  - `README.md`: Comprehensive 10-section documentation covering Product Summary, Live Deployment placeholder, full Repository Map, verified Run with Docker instructions, verified Run without Docker instructions, Data Ingestion and regeneration runbook, Test and Lint commands, Vercel Serverless Architecture overview, Key Design Decisions (09:00 cutoff rationale, error conventions and imbalance risk, horizon definition, gzipped CSV storage vs Parquet, strict NaN preservation, exclusion of MAPE, color-blind palette), Limitations and Future Roadmap, and AI disclosure.
+  - `Makefile`: Added `ingest` target (`python backend/ingest/fetch_elexon.py`) to streamline snapshot reproduction.
+  - `docs/AI_USAGE.md`: Maintained full chronological transparency across all 8 development phases.
+- **Manual Verification & Changes**:
+  - Re-executed and verified every command mentioned in the documentation:
+    - `python -m pytest backend/tests` (27 passed in 3.0s).
+    - `python -m ruff check backend` (All checks passed).
+    - `npm --prefix frontend run lint` (0 lint/typecheck errors).
+    - `npm --prefix frontend run build` (built cleanly in 8.7s).
+    - `python backend/ingest/fetch_elexon.py --help` (verified CLI arguments).
+    - `docker compose up -d` & `docker compose down` (tested local containerization workflow).
+  - Confirmed all links and code references resolve accurately.

@@ -1,4 +1,4 @@
-.PHONY: help dev-backend dev-frontend test lint install-backend install-frontend docker-build docker-up docker-down
+.PHONY: help dev-backend dev-frontend test lint install-backend install-frontend docker-build docker-up docker-down ingest
 
 help:
 	@echo "Available targets:"
@@ -7,6 +7,7 @@ help:
 	@echo "  make test          - Run backend unit tests with pytest"
 	@echo "  make lint          - Lint backend with ruff and frontend with typescript"
 	@echo "  make install       - Install backend and frontend dependencies"
+	@echo "  make ingest        - Ingest Elexon BMRS actuals and forecasts snapshots"
 	@echo "  make docker-build  - Build Docker containers"
 	@echo "  make docker-up     - Start Docker containers in detached mode"
 	@echo "  make docker-down   - Stop and remove Docker containers"
@@ -40,3 +41,6 @@ docker-up:
 
 docker-down:
 	docker compose down
+
+ingest:
+	python backend/ingest/fetch_elexon.py
