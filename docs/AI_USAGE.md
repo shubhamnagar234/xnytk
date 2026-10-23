@@ -50,4 +50,25 @@ This document records the use of AI assistance (Google Antigravity) throughout t
   - Verified spot check on delivery day 2026-01-15 at 14:00 UTC (cutoff 2026-01-14 09:00 UTC): manual CSV filter produced publishTime `2026-01-14 07:30:00Z`, forecast `9619 MW`, horizon `30.5 h`, exactly matching `decision_forecast`.
   - Ran full test suite: all 18 unit tests passed cleanly in 1.1s.
 
+---
+
+## Phase 4: FastAPI Backend Implementation
+- **Date**: October 23, 2026
+- **AI Tool**: Antigravity (Powered by Gemini 3.8 Flash)
+- **What AI generated**:
+  - `backend/app/config.py`: App configuration constants, data paths, delivery window dates (`2026-01-02` to `2026-02-01`), default cutoff (`09:00`), and London timezone.
+  - `backend/app/data_loader.py`: In-memory snapshot caching mechanism that parses and holds `actuals.csv.gz` and `forecasts.csv.gz` once at startup, with support for custom test mock injection.
+  - `backend/app/models.py`: Pydantic response models for `/api/meta`, `/api/forecast/decision`, `/api/forecast/vintages`, `/api/accuracy/summary`, `/api/accuracy/by-horizon`, and `/api/accuracy/breakdowns`.
+  - API routers:
+    - `backend/app/api/meta.py`: `GET /api/meta`
+    - `backend/app/api/forecast.py`: `GET /api/forecast/decision` and `GET /api/forecast/vintages`
+    - `backend/app/api/accuracy.py`: `GET /api/accuracy/summary`, `GET /api/accuracy/by-horizon`, `GET /api/accuracy/breakdowns`
+  - `backend/app/main.py`: Configured lifespan handler for zero-cost startup data caching, registered CORS middleware, and mounted all routers under `/api`.
+  - `backend/tests/test_api.py`: 9 TestClient unit tests verifying all endpoints, Pydantic schemas, 400 Bad Request on invalid date/cutoff formats, 404 Not Found on out-of-range dates, tiny mock fixture isolation, and exact match against Phase 3 spot-check results.
+- **Manual Verification & Changes**:
+  - Verified OpenAPI schema generation: all 7 API endpoints properly documented and accessible via `/docs` and `/openapi.json`.
+  - Verified response on real delivery day `2026-01-15` at 14:00 UTC matches Phase 3: forecast = `9,619 MW`, horizon = `30.5 h`, publishTime = `2026-01-14T07:30:00+00:00`.
+  - Ran full test suite: all 27 unit and integration tests passed in 1.5s.
+
+
 
