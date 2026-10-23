@@ -70,5 +70,27 @@ This document records the use of AI assistance (Google Antigravity) throughout t
   - Verified response on real delivery day `2026-01-15` at 14:00 UTC matches Phase 3: forecast = `9,619 MW`, horizon = `30.5 h`, publishTime = `2026-01-14T07:30:00+00:00`.
   - Ran full test suite: all 27 unit and integration tests passed in 1.5s.
 
+---
+
+## Phase 5: Frontend Development (Pass 1 & Pass 2)
+- **Date**: October 23, 2026
+- **AI Tool**: Antigravity (Powered by Gemini 3.8 Flash)
+- **What AI generated**:
+  - `frontend/src/types/api.ts`: Strict TypeScript interfaces mirroring backend Pydantic models.
+  - `frontend/src/api/client.ts`: Typed fetch API client integrated with TanStack Query.
+  - `frontend/src/index.css`: Institutional energy trading design system with a color-blind-safe palette (Sky Blue for actuals `#0284c7`, Vivid Amber `#d97706` for forecasts, Muted Slate `#94a3b8` for vintages, Orange `#ea580c` for over-forecast risk).
+  - Navigation & components: `frontend/src/components/Navbar.tsx`, `KpiCard.tsx`, and `InsightBanner.tsx`.
+  - Three distinct views:
+    - `frontend/src/pages/DecisionView.tsx`: Decision view with day picker, D-1 cutoff control, KPI cards, Recharts actual vs decision forecast curve, vintages toggle, custom London time tooltips, and half-hourly position table.
+    - `frontend/src/pages/AccuracyView.tsx`: Multi-dimensional quantitative evaluation view with date range filter, KPI row, 5-bucket lead-time horizon decay chart, diurnal 24h error breakdown, error histogram distribution, and generation terciles.
+    - `frontend/src/pages/MethodologyView.tsx`: Static explanatory page covering market rules (EPEX/N2EX gate closure), D-1 cutoff rationale, error definition, Elexon BMRS streams, and roadmap limitations.
+  - `frontend/src/App.tsx`: React Router layout with QueryClientProvider and fallback routing.
+  - Captured verification screenshots in `docs/screenshots/` (`decision_view.png`, `accuracy_view.png`, `methodology_view.png`).
+- **Manual Verification & Changes**:
+  - Resolved minor unused icon imports flagged by TypeScript `noUnusedLocals`.
+  - Verified production build compiles cleanly (`npm run build`).
+  - Executed browser verification session testing interactive vintage toggles, date changes, and navigation across all 3 routes with 0 console errors.
+
+
 
 
