@@ -5,7 +5,11 @@ from pathlib import Path
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-DATA_DIR = Path(os.getenv("DATA_DIR", BASE_DIR / "data"))
+_candidate_data_dir = Path(os.getenv("DATA_DIR", BASE_DIR / "data"))
+if not _candidate_data_dir.exists() and (Path.cwd() / "data").exists():
+    _candidate_data_dir = Path.cwd() / "data"
+
+DATA_DIR = _candidate_data_dir
 
 ACTUALS_CSV_GZ = DATA_DIR / "actuals.csv.gz"
 FORECASTS_CSV_GZ = DATA_DIR / "forecasts.csv.gz"

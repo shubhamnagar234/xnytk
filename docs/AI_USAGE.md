@@ -114,3 +114,20 @@ This document records the use of AI assistance (Google Antigravity) throughout t
     - Proxied frontend `/api/meta` on port 3000 (`{"delivery_days":[...],"total_actual_rows":1488,...}`).
     - Client-side routing fallback on port 3000 (`/methodology` returns HTTP 200 with SPA HTML).
   - Executed `docker compose down` and verified clean container and network teardown.
+
+---
+
+## Phase 7: Vercel Deployment Configuration
+- **Date**: October 23, 2026
+- **AI Tool**: Antigravity (Powered by Gemini 3.8 Flash)
+- **What AI generated**:
+  - `vercel.json`: Single-project serverless deployment configuration combining static Vite SPA serving with Python 3.11 serverless API runtime, explicit `installCommand`, `buildCommand`, and `outputDirectory`, `includeFiles` data bundling, and catch-all rewrite rules.
+  - `api/index.py`: Serverless ASGI entrypoint that dynamically adds repo root to `sys.path`, mounts routers with and without `/api` prefix to handle Vercel path rewriting transparently, and exposes `app`.
+  - `requirements.txt` & `api/requirements.txt`: Root-level and function-level runtime-only dependency specifications omitting heavy test/lint tooling (`fastapi`, `uvicorn`, `pandas`, `httpx`, `pydantic`).
+  - `backend/app/config.py`: Added robust `DATA_DIR` path resolution checking both `BASE_DIR / "data"` and `Path.cwd() / "data"`.
+  - `docs/VERCEL_DEPLOYMENT.md`: Comprehensive deployment architecture and settings breakdown covering single-project structure, function packaging, and deployment steps.
+- **Manual Verification & Changes**:
+  - Verified `api/index.py` import and startup under Python 3.14/3.11 runtimes without issues.
+  - Validated all 27 pytest unit and integration tests passing (`pytest backend/tests`).
+  - Verified frontend production build pipeline via `npm --prefix frontend run build` (outputs to `frontend/dist`).
+  - Tested programmatic `TestClient` queries through `api.index:app` for `/api/health`, `/health` (stripped prefix), `/api/meta`, `/api/forecast/decision`, and `/api/accuracy/summary` with 100% success.
