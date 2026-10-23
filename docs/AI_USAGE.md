@@ -35,3 +35,19 @@ This document records the use of AI assistance (Google Antigravity) throughout t
   - Confirmed that `WINDFOR` forecasts are hourly (`:00`) rather than half-hourly (`:00` and `:30`), resulting in 744 covered delivery half-hours and 744 uncovered half-hours that will correctly propagate as `NaN` per brief specification.
   - Verified unit test suite passes offline (`9 passed`).
 
+---
+
+## Phase 3: Analytics Core
+- **Date**: October 23, 2026
+- **AI Tool**: Antigravity (Powered by Gemini 3.8 Flash)
+- **What AI generated**:
+  - `backend/app/analytics/decision.py`: Pure pandas implementations of `decision_forecast`, `join_actuals`, `forecast_vintages`, and `get_decision_cutoff_utc` with zero web framework imports.
+  - `backend/app/analytics/metrics.py`: Pure pandas implementations of `summary_metrics`, `error_by_horizon` (across all vintages for 0-6h, 6-12h, 12-24h, 24-36h, 36-48h), `error_by_hour_of_day`, and `error_by_actual_level` (terciles).
+  - `backend/app/analytics/__init__.py`: Exporting all public functions.
+  - `backend/tests/test_analytics.py`: 9 comprehensive unit tests testing cutoff logic across day boundaries, pre-cutoff vs post-cutoff selection, NaN preservation, exact hand-computed 4-row metrics validation, and a real-data spot check against `data/forecasts.csv.gz`.
+- **Manual Verification & Changes**:
+  - Hand-calculated and matched 4-row benchmark: MAE=20.0, RMSE=21.21, Bias=5.0, P50=20.0, P90=27.0, P95=28.5, MAE % of mean actual=16.0%.
+  - Verified spot check on delivery day 2026-01-15 at 14:00 UTC (cutoff 2026-01-14 09:00 UTC): manual CSV filter produced publishTime `2026-01-14 07:30:00Z`, forecast `9619 MW`, horizon `30.5 h`, exactly matching `decision_forecast`.
+  - Ran full test suite: all 18 unit tests passed cleanly in 1.1s.
+
+
