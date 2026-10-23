@@ -18,3 +18,20 @@ This document records the use of AI assistance (Google Antigravity) throughout t
   - Configured git local identity to ensure anonymity.
   - Verified `/api/health` connectivity end-to-end through Vite dev proxy.
   - Verified test suite passes via pytest.
+
+---
+
+## Phase 2: Data Ingestion & Snapshot Generation
+- **Date**: October 23, 2026
+- **AI Tool**: Antigravity (Powered by Gemini 3.8 Flash)
+- **What AI generated**:
+  - Queried live Elexon BMRS OpenAPI spec and `/stream` endpoints to identify exact schema and parameters.
+  - Offline fixtures: `backend/tests/fixtures/fuelhh_sample.json` and `backend/tests/fixtures/windfor_sample.json`.
+  - Ingestion CLI: `backend/ingest/fetch_elexon.py` with chunking (5 days), exponential backoff, schema verification, horizon computation (`startTime - publishTime`), 0-48h filtering, and summary statistics.
+  - Unit tests: `backend/tests/test_ingest.py` testing parsers, schema assertions, horizon filtering, and missing period counting with zero network dependencies.
+  - Compressed data snapshots: `data/actuals.csv.gz` (1,488 rows, 7.8 KB) and `data/forecasts.csv.gz` (11,777 rows, 83.0 KB).
+- **Manual Verification & Changes**:
+  - Validated that `FUELHH` returns exactly 1,488 half-hours across the 31 delivery days (2026-01-02 to 2026-02-01) with 0 missing periods.
+  - Confirmed that `WINDFOR` forecasts are hourly (`:00`) rather than half-hourly (`:00` and `:30`), resulting in 744 covered delivery half-hours and 744 uncovered half-hours that will correctly propagate as `NaN` per brief specification.
+  - Verified unit test suite passes offline (`9 passed`).
+
