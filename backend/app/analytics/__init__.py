@@ -1,0 +1,1 @@
+"""Analytics pure functions package."""
